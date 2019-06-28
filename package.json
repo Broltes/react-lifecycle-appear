@@ -1,0 +1,46 @@
+{
+  "name": "react-appear-hook",
+  "version": "0.0.1",
+  "description": "A React HOC, adding hooks for handling a component enters or exits the viewport.",
+  "main": "lib/index.js",
+  "browserslist": [
+    "Android >= 4.4",
+    "iOS >= 9"
+  ],
+  "scripts": {
+    "build": "BABEL_ENV=production babel src -d lib",
+    "release": "node build/release.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Broltes/react-appear-hook.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "keywords": [
+    "react",
+    "appear",
+    "disappear",
+    "hook",
+    "HOC"
+  ],
+  "author": "Broltes <broltes@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Broltes/react-appear-hook/issues"
+  },
+  "homepage": "https://github.com/Broltes/react-appear-hook#readme",
+  "dependencies": {
+    "intersection-observer": "^0.7.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}
