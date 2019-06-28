@@ -26,20 +26,36 @@ import withAppear from 'react-appear-hook';
 
 @withAppear
 class extends Component {
+  state = {
+    appeared: false
+  }
+
   didAppear(ioe) {
     console.log('Appeared');
+    this.setState({ appeared: true });
   }
 
   didAppearOnce(ioe) {
     console.log('Once Appeared');
+    this.setState({ appeared: true });
   }
 
   didDisappear(ioe) {
     console.log('Disappeared');
+    this.setState({ appeared: false });
   }
 
   didDisappearOnce(ioe) {
     console.log('Once Disappeared');
+    this.setState({ appeared: false });
+  }
+
+  render() {
+    const { appeared } = this.state;
+
+    return (
+      <div>{ appeared ? 'appeared' : 'disappeared' }</div>
+    )
   }
 }
 ```
