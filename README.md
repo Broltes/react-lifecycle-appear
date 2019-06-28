@@ -26,19 +26,19 @@ import withAppear from 'react-appear-hook';
 
 @withAppear
 class extends Component {
-  didAppear() {
+  didAppear(ioe) {
     console.log('Appeared');
   }
 
-  didAppearOnce() {
+  didAppearOnce(ioe) {
     console.log('Once Appeared');
   }
 
-  didDisappear() {
+  didDisappear(ioe) {
     console.log('Disappeared');
   }
 
-  didDisappearOnce() {
+  didDisappearOnce(ioe) {
     console.log('Once Disappeared');
   }
 }
