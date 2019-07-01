@@ -4,10 +4,12 @@ import 'intersection-observer';
 
 const observedList = [];
 
-function observe(dom, child) {
-  observedList.push(dom);
-  observedList.push(child);
-  io.observe(dom);
+function observe(dom, component) {
+  if (dom instanceof Element) {
+    observedList.push(dom);
+    observedList.push(component);
+    io.observe(dom);
+  }
 }
 function unobserve(dom) {
   const domIndex = observedList.indexOf(dom);
