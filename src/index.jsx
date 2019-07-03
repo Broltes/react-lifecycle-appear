@@ -8,8 +8,7 @@ const getSingleIo = getSingle(() => {
   return new IntersectionObserver(entries => {
     entries.forEach(item => {
       const dom = item.target;
-      const domIndex = observedList.indexOf(dom);
-      const component = observedList[domIndex + 1];
+      const component = getCmptByDom(dom);
 
       if (item.isIntersecting) {
         // appear
@@ -52,8 +51,12 @@ function observe(dom, component) {
 }
 function unobserve(dom) {
   const domIndex = observedList.indexOf(dom);
-  observedList.splice(domIndex, domIndex + 1);
+  observedList.splice(domIndex, 2);
   getSingleIo().unobserve(dom);
+}
+function getCmptByDom(dom) {
+  const domIndex = observedList.indexOf(dom);
+  return observedList[domIndex + 1];
 }
 
 export default Child =>
