@@ -2,8 +2,6 @@ const readline = require('readline');
 const util = require('util');
 const exec = require('child_process').execFileSync;
 
-const distDir = 'lib';
-
 async function ask(question) {
   const readLineFromShell = readline.createInterface({
     input: process.stdin,
@@ -26,13 +24,15 @@ async function main() {
   const releaseVer = require('../package.json').version;
   console.log(`正在发布 ${releaseVer} ... \n\r`);
 
-  exec('rm', ['-rf', distDir]);
+  exec('rm', ['-rf', 'lib']);
+  exec('rm', ['-rf', 'es']);
   exec('npm', ['run', 'build'], { stdio: 'inherit' });
   exec('npm', [
     'publish',
     '--tag',
     /-/.test(releaseVer) ? 'beta' : 'latest'
   ]);
+  exec('git', ['push', '--follow-tags']);
 }
 try {
   main();
