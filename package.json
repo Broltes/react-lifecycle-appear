@@ -1,5 +1,5 @@
 {
-  "name": "react-appear-hook",
+  "name": "react-lifecycle-appear",
   "version": "1.0.0",
   "description": "A React HOC, adding hooks for handling a component enters or exits the viewport.",
   "module": "es/index.js",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Broltes/react-appear-hook.git"
+    "url": "git+https://github.com/Broltes/react-lifecycle-appear.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
@@ -32,9 +32,9 @@
   "author": "Broltes <broltes@qq.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Broltes/react-appear-hook/issues"
+    "url": "https://github.com/Broltes/react-lifecycle-appear/issues"
   },
-  "homepage": "https://github.com/Broltes/react-appear-hook#readme",
+  "homepage": "https://github.com/Broltes/react-lifecycle-appear#readme",
   "dependencies": {
     "intersection-observer": "^0.7.0"
   },
