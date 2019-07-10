@@ -75,6 +75,21 @@ export default function(hooks) {
       componentDidMount() {
         super.componentDidMount && super.componentDidMount.call(this);
 
+        if (!hooks) {
+          const {
+            didAppearOnce,
+            didAppear,
+            didDisappear,
+            didDisappearOnce
+          } = this;
+          hooks = {
+            didAppearOnce,
+            didAppear,
+            didDisappear,
+            didDisappearOnce
+          };
+        }
+
         dom = ReactDOM.findDOMNode(this);
         observe(dom, hooks, this);
       }
@@ -83,6 +98,6 @@ export default function(hooks) {
         super.componentWillUnmount && super.componentWillUnmount.call(this);
         unobserve(dom);
       }
-    }
-  }
+    };
+  };
 }
