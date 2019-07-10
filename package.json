@@ -1,6 +1,6 @@
 {
   "name": "react-appear-hook",
-  "version": "1.0.0-0",
+  "version": "1.0.0",
   "description": "A React HOC, adding hooks for handling a component enters or exits the viewport.",
   "module": "es/index.js",
   "main": "lib/index.js",
