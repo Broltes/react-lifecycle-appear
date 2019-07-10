@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import 'intersection-observer';
 import { getSingle } from './utils';
@@ -8,33 +8,33 @@ const getSingleIo = getSingle(() => {
   return new IntersectionObserver(entries => {
     entries.forEach(item => {
       const dom = item.target;
-      const component = getCmptByDom(dom);
+      const [hooks, instance] = getOptionsByDom(dom);
 
       if (item.isIntersecting) {
         // appear
-        if (component.didAppearOnce) {
-          component.didAppearOnce(item);
-          component.didAppearOnce = null;
+        if (hooks.didAppearOnce) {
+          hooks.didAppearOnce.call(instance, item);
+          hooks.didAppearOnce = null;
         }
-        if (component.didAppear) {
-          component.didAppear(item);
+        if (hooks.didAppear) {
+          hooks.didAppear.call(instance, item);
         }
       } else {
         // disappear
-        if (component.didDisappearOnce) {
-          component.didDisappearOnce(item);
-          component.didDisappearOnce = null;
+        if (hooks.didDisappearOnce) {
+          hooks.didDisappearOnce.call(instance, item);
+          hooks.didDisappearOnce = null;
         }
-        if (component.didDisappear) {
-          component.didDisappear(item);
+        if (hooks.didDisappear) {
+          hooks.didDisappear.call(instance, item);
         }
       }
 
       if (
-        !component.didAppearOnce &&
-        !component.didAppear &&
-        !component.didDisappear &&
-        !component.didDisappearOnce
+        !hooks.didAppearOnce &&
+        !hooks.didAppear &&
+        !hooks.didDisappear &&
+        !hooks.didDisappearOnce
       ) {
         unobserve(dom);
       }
@@ -42,10 +42,10 @@ const getSingleIo = getSingle(() => {
   });
 });
 
-function observe(dom, component) {
+function observe(dom, hooks, instance) {
   if (dom instanceof Element) {
     observedList.push(dom);
-    observedList.push(component);
+    observedList.push([hooks, instance]);
     getSingleIo().observe(dom);
   }
 }
@@ -54,23 +54,35 @@ function unobserve(dom) {
   observedList.splice(domIndex, 2);
   getSingleIo().unobserve(dom);
 }
-function getCmptByDom(dom) {
+function getOptionsByDom(dom) {
   const domIndex = observedList.indexOf(dom);
   return observedList[domIndex + 1];
 }
 
-export default Child =>
-  class extends Component {
-    componentDidMount() {
-      this.dom = ReactDOM.findDOMNode(this);
-      observe(this.dom, this.child);
-    }
+/**
+ * 为防止 hooks 被其它 HOC 屏蔽，所以通过参数传入
+ * @param {object} hooks
+ */
+export default function(hooks) {
+  return function(Cmpt) {
+    let dom;
 
-    componentWillUnmount() {
-      unobserve(this.dom);
-    }
+    /**
+     * 通过继承的方式，而非透传 props 和 复用 UI 渲染，
+     * 防止影响其它 HOC，如 MobX observer
+     */
+    return class extends Cmpt {
+      componentDidMount() {
+        super.componentDidMount && super.componentDidMount.call(this);
 
-    render() {
-      return <Child {...this.props} ref={el => (this.child = el)} />;
+        dom = ReactDOM.findDOMNode(this);
+        observe(dom, hooks, this);
+      }
+
+      componentWillUnmount() {
+        super.componentWillUnmount && super.componentWillUnmount.call(this);
+        unobserve(dom);
+      }
     }
-  };
+  }
+}

@@ -12,6 +12,8 @@ A React HOC, adding hooks for handling a component enters or exits the viewport.
 All hooks will receive a param when called: [IntersectionObserverEntry
 ](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry)
 
+Tip: when react-appear-hook needs to be combined with other decorators or higher-order-components, make sure that react-appear-hook is the innermost (first applied) decorator, this will not affect other HOC behavior, such as MobX observer; otherwise the `this` in hooks may not correct.
+
 ## Installation
 
 ```bash
@@ -24,12 +26,7 @@ npm install react-appear-hook --save
 import React, { Component } from 'react';
 import withAppear from 'react-appear-hook';
 
-@withAppear
-class extends Component {
-  state = {
-    appeared: false
-  }
-
+@withAppear({
   didAppear(ioe) {
     console.log('Appeared');
     this.setState({ appeared: true });
@@ -48,6 +45,11 @@ class extends Component {
   didDisappearOnce(ioe) {
     console.log('Once Disappeared');
     this.setState({ appeared: false });
+  }
+})
+class extends Component {
+  state = {
+    appeared: false
   }
 
   render() {
