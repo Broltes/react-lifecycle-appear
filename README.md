@@ -1,15 +1,15 @@
 # react-lifecycle-appear
 
-A React HOC, adding hooks for handling a component enters or exits the viewport.
+A React HOC, adding lifecycle methods for handling a component enters or exits the viewport.
 
-## Add following hooks
+## Add following lifecycle methods
 
 - **didAppear**: Called when a componnet enters the viewport
 - **didAppearOnce**: Same as `didAppear` but called only once
 - **didDisappear**: Called when a componnet exits the viewport
 - **didDisappearOnce**: Same as `didDisappear` but called only once
 
-All hooks will receive a param when called: [IntersectionObserverEntry
+All lifecycle methods will receive a param when called: [IntersectionObserverEntry
 ](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry)
 
 Tip: when react-lifecycle-appear needs to be combined with other decorators or higher-order-components, make sure that react-lifecycle-appear is the innermost (first applied) decorator, this will not affect other HOC behavior, such as MobX observer.
