@@ -1,0 +1,33 @@
+{
+  "presets": [
+    "@babel/preset-react",
+    [
+      "@babel/preset-env"
+    ]
+  ],
+  "env": {
+    "node": {
+      "presets": [
+        "@babel/preset-react",
+        [
+          "@babel/preset-env",
+          {
+            "exclude": ["transform-classes"]
+          }
+        ]
+      ]
+    },
+    "es6": {
+      "presets": [
+        "@babel/preset-react",
+        [
+          "@babel/preset-env",
+          {
+            "modules": false,
+            "exclude": ["transform-classes"]
+          }
+        ]
+      ]
+    }
+  }
+}
