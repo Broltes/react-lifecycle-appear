@@ -44,7 +44,7 @@ async function main() {
   exec('git', ['add', '-A']);
   exec('git', ['commit', '-m', `release:${releaseVer}: ${versionMessage}`]);
   if (!isBetaVersion) {
-    exec('git', ['tag', releaseVer]);
+    exec('git', ['tag', `v${releaseVer}`]);
   }
   exec('git', ['push', '--follow-tags']);
 }
