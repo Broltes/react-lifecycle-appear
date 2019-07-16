@@ -15,23 +15,40 @@ async function ask(question) {
   });
 }
 
-async function main() {
-  const inputVer = await ask(
-    `请输入发布版本号：`
-  );
-  exec('npm', ['version', inputVer]);
+function requireNoCache(modulePath) {
+  delete require.cache[require.resolve(modulePath)];
+  return require(modulePath);
+}
 
-  const releaseVer = require('../package.json').version;
+async function main() {
+  const currentVer = require('../package.json').version;
+  const inputVer = await ask(
+      `当前版本号：${currentVer}\n\r请输入发布版本号：`
+  );
+  const versionMessage = await ask(`请输入版本信息：`);
+  const isBetaVersion = /(^pre)|-/.test(inputVer);
+
+
+  // upgrade version
+  exec('npm', ['version', '--no-git-tag-version', inputVer]);
+  const releaseVer = requireNoCache('../package.json').version;
+
   console.log(`正在发布 ${releaseVer} ... \n\r`);
 
-  exec('rm', ['-rf', 'lib']);
-  exec('rm', ['-rf', 'es']);
+  // build
   exec('npm', ['run', 'build'], { stdio: 'inherit' });
-  exec('npm', [
-    'publish',
-    '--tag',
-    /-/.test(releaseVer) ? 'beta' : 'latest'
-  ]);
+
+  // publish
+  exec('npm', ['publish', '--tag', isBetaVersion ? 'beta' : 'latest'], {
+      stdio: 'inherit'
+  });
+
+  // git push
+  if (!isBetaVersion) {
+      exec('git', ['tag', releaseVer]);
+  }
+  exec('git', ['add', '-A']);
+  exec('git', ['commit', '-m', `release:${releaseVer}: ${versionMessage}`]);
   exec('git', ['push', '--follow-tags']);
 }
 try {

@@ -1,6 +1,6 @@
 {
   "name": "react-lifecycle-appear",
-  "version": "1.0.2-0",
+  "version": "1.0.2",
   "description": "A React HOC, adding lifecycle methods for handling a component enters or exits the viewport.",
   "browser": "browser/index.js",
   "main": "lib/index.js",
@@ -13,7 +13,8 @@
     "build:browser": "babel src -d ./browser",
     "build:es6": "BABEL_ENV=es6 babel src -d ./es",
     "build:node": "BABEL_ENV=node babel src -d ./lib",
-    "build": "npm run build:browser && npm run build:es6 && npm run build:node",
+    "clean": "rm -rf ./browser ./es ./lib",
+    "build": "npm run clean && npm run build:browser && npm run build:es6 && npm run build:node",
     "release": "node build/release.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
