@@ -22,12 +22,9 @@ function requireNoCache(modulePath) {
 
 async function main() {
   const currentVer = require('../package.json').version;
-  const inputVer = await ask(
-      `当前版本号：${currentVer}\n\r请输入发布版本号：`
-  );
+  const inputVer = await ask(`当前版本号：${currentVer}\n\r请输入发布版本号：`);
   const versionMessage = await ask(`请输入版本信息：`);
   const isBetaVersion = /(^pre)|-/.test(inputVer);
-
 
   // upgrade version
   exec('npm', ['version', '--no-git-tag-version', inputVer]);
@@ -40,15 +37,15 @@ async function main() {
 
   // publish
   exec('npm', ['publish', '--tag', isBetaVersion ? 'beta' : 'latest'], {
-      stdio: 'inherit'
+    stdio: 'inherit'
   });
 
   // git push
-  if (!isBetaVersion) {
-      exec('git', ['tag', releaseVer]);
-  }
   exec('git', ['add', '-A']);
   exec('git', ['commit', '-m', `release:${releaseVer}: ${versionMessage}`]);
+  if (!isBetaVersion) {
+    exec('git', ['tag', releaseVer]);
+  }
   exec('git', ['push', '--follow-tags']);
 }
 try {
