@@ -1,6 +1,6 @@
 {
   "name": "react-lifecycle-appear",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A React HOC, adding lifecycle methods for handling a component enters or exits the viewport.",
   "browser": "browser/index.js",
   "main": "lib/index.js",
