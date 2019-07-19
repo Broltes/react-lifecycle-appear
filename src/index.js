@@ -1,3 +1,4 @@
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import 'intersection-observer';
 import { getSingle } from './utils';
@@ -67,7 +68,7 @@ function getInstanceByDom(dom) {
  * 为防止 hooks 被其它 HOC 屏蔽，所以通过参数传入
  * @param {object} hooks
  */
-export default function(hooks) {
+export default function withAppear(hooks) {
   return function(Cmpt) {
     /**
      * 通过继承的方式，而非透传 props 和 复用 UI 渲染，
@@ -87,4 +88,23 @@ export default function(hooks) {
 
     return Object.assign(Enhance, hooks);
   };
+}
+
+@withAppear()
+export class Appear extends Component {
+  constructor(props) {
+    super(props);
+    const { onAppearOnce, onAppear, onDisappear, onDisappearOnce } = props;
+
+    Object.assign(this, {
+      didAppearOnce: onAppearOnce,
+      didAppear: onAppear,
+      didDisappear: onDisappear,
+      didDisappearOnce: onDisappearOnce
+    });
+  }
+
+  render() {
+    return this.props.children;
+  }
 }

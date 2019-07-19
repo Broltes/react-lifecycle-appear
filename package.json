@@ -1,6 +1,6 @@
 {
   "name": "react-lifecycle-appear",
-  "version": "1.0.5",
+  "version": "1.1.0-0",
   "description": "A React HOC, adding lifecycle methods for handling a component enters or exits the viewport.",
   "browser": "browser/index.js",
   "main": "lib/index.js",
@@ -44,6 +44,7 @@
   "devDependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "react": "^16.8.6",

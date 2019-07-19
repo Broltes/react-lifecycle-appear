@@ -21,6 +21,7 @@ npm install react-lifecycle-appear --save
 ```
 
 ## Usage
+### HOC params
 
 ```javascript
 import React, { Component } from 'react';
@@ -61,7 +62,8 @@ class extends Component {
   }
 }
 ```
-OR
+
+### Component methods
 
 ```javascript
 import React, { Component } from 'react';
@@ -98,6 +100,53 @@ class extends Component {
 
     return (
       <div>{ appeared ? 'appeared' : 'disappeared' }</div>
+    )
+  }
+}
+```
+
+### Component
+```javascript
+import React, { Component } from 'react';
+import { Appear } from 'react-lifecycle-appear';
+
+class extends Component {
+  state = {
+    appeared: false
+  }
+
+  handleAppear = (ioe) => {
+    console.log('Appeared');
+    this.setState({ appeared: true });
+  }
+
+  handleAppearOnce = (ioe) => {
+    console.log('Once Appeared');
+    this.setState({ appeared: true });
+  }
+
+  handleDisappear = (ioe) => {
+    console.log('Disappeared');
+    this.setState({ appeared: false });
+  }
+
+  handleDisappearOnce = (ioe) => {
+    console.log('Once Disappeared');
+    this.setState({ appeared: false });
+  }
+
+  render() {
+    const { appeared } = this.state;
+
+    return (
+      <Appear
+        onAppear={this.handleAppear}
+        onAppearOnce={this.handleAppearOnce}
+        onDisappear={this.handleDisappear}
+        onDisappearOnce={this.handleDisappearOnce}
+      >
+        <div>{ appeared ? 'appeared' : 'disappeared' }</div>
+      </Appear>
     )
   }
 }
