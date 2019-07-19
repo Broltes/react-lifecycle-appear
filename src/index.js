@@ -3,6 +3,12 @@ import ReactDOM from 'react-dom';
 import 'intersection-observer';
 import { getSingle } from './utils';
 
+const hookNames = [
+  'didAppearOnce',
+  'didAppear',
+  'didDisappear',
+  'didDisappearOnce'
+];
 /**
  * 为防止 hooks 被其它 HOC 屏蔽，所以通过参数传入
  * @param {object} hooks
@@ -37,12 +43,7 @@ export default function withAppear(hooks, ioOptions) {
           }
         }
 
-        if (
-          !instance.didAppearOnce &&
-          !instance.didAppear &&
-          !instance.didDisappear &&
-          !instance.didDisappearOnce
-        ) {
+        if (hookNames.every(name => !instance[name])) {
           unobserve(instance);
         }
       });
@@ -51,7 +52,7 @@ export default function withAppear(hooks, ioOptions) {
 
   function observe(instance) {
     const dom = ReactDOM.findDOMNode(instance);
-    if (dom instanceof Element) {
+    if (dom instanceof Element && hookNames.some(name => !!instance[name])) {
       observedList.push(instance);
       observedList.push(dom);
       getSingleIo().observe(dom);
