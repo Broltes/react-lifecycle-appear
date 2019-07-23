@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import 'intersection-observer';
-import { getSingle } from './utils';
 
 const hookNames = [
   'didAppearOnce',
@@ -16,53 +15,51 @@ const hookNames = [
  */
 export default function withAppear(hooks, ioOptions) {
   const observedList = [];
-  const getSingleIo = getSingle(() => {
-    return new IntersectionObserver(entries => {
-      entries.forEach(item => {
-        const dom = item.target;
-        const instance = getInstanceByDom(dom);
-        if (!instance) return;
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(item => {
+      const dom = item.target;
+      const instance = getInstanceByDom(dom);
+      if (!instance) return;
 
-        if (item.isIntersecting) {
-          // appear
-          if (instance.didAppearOnce) {
-            instance.didAppearOnce(item);
-            instance.didAppearOnce = null;
-          }
-          if (instance.didAppear) {
-            instance.didAppear(item);
-          }
-        } else {
-          // disappear
-          if (instance.didDisappearOnce) {
-            instance.didDisappearOnce(item);
-            instance.didDisappearOnce = null;
-          }
-          if (instance.didDisappear) {
-            instance.didDisappear(item);
-          }
+      if (item.isIntersecting) {
+        // appear
+        if (instance.didAppearOnce) {
+          instance.didAppearOnce(item);
+          instance.didAppearOnce = null;
         }
+        if (instance.didAppear) {
+          instance.didAppear(item);
+        }
+      } else {
+        // disappear
+        if (instance.didDisappearOnce) {
+          instance.didDisappearOnce(item);
+          instance.didDisappearOnce = null;
+        }
+        if (instance.didDisappear) {
+          instance.didDisappear(item);
+        }
+      }
 
-        if (hookNames.every(name => !instance[name])) {
-          unobserve(instance);
-        }
-      });
-    }, ioOptions);
-  });
+      if (hookNames.every(name => !instance[name])) {
+        unobserve(instance);
+      }
+    });
+  }, ioOptions);
 
   function observe(instance) {
     const dom = ReactDOM.findDOMNode(instance);
     if (dom instanceof Element && hookNames.some(name => !!instance[name])) {
       observedList.push(instance);
       observedList.push(dom);
-      getSingleIo().observe(dom);
+      io.observe(dom);
     }
   }
   function unobserve(instance) {
     const instanceIndex = observedList.indexOf(instance);
     if (instanceIndex >= 0) {
       const dom = observedList[instanceIndex + 1];
-      getSingleIo().unobserve(dom);
+      io.unobserve(dom);
       observedList.splice(instanceIndex, 2);
     }
   }
