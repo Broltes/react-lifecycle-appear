@@ -14,11 +14,10 @@ const hookNames = [
  * @param {object} ioOptions
  */
 export default function withAppear(hooks, ioOptions) {
-  const observedList = [];
   const io = new IntersectionObserver(entries => {
     entries.forEach(item => {
       const dom = item.target;
-      const instance = getInstanceByDom(dom);
+      const { instance } = dom;
       if (!instance) return;
 
       if (item.isIntersecting) {
@@ -50,22 +49,17 @@ export default function withAppear(hooks, ioOptions) {
   function observe(instance) {
     const dom = ReactDOM.findDOMNode(instance);
     if (dom instanceof Element && hookNames.some(name => !!instance[name])) {
-      observedList.push(instance);
-      observedList.push(dom);
+      dom.instance = instance;
+      instance.__rah_dom = dom;
       io.observe(dom);
     }
   }
   function unobserve(instance) {
-    const instanceIndex = observedList.indexOf(instance);
-    if (instanceIndex >= 0) {
-      const dom = observedList[instanceIndex + 1];
+    const { __rah_dom: dom } = instance;
+    if (dom) {
+      dom.instance = null;
       io.unobserve(dom);
-      observedList.splice(instanceIndex, 2);
     }
-  }
-  function getInstanceByDom(dom) {
-    const domIndex = observedList.indexOf(dom);
-    return observedList[domIndex - 1];
   }
 
   return function(Cmpt) {
