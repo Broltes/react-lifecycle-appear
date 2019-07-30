@@ -1,28 +1,19 @@
 {
-  "presets": ["@babel/preset-react", ["@babel/preset-env"]],
-  "plugins": [["@babel/plugin-proposal-decorators", { "legacy": true }]],
+  "presets": ["@babel/preset-env", "@babel/preset-react"],
+  "plugins": [
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    "@babel/plugin-transform-runtime"
+  ],
   "env": {
-    "node": {
+    "esm": {
       "presets": [
-        "@babel/preset-react",
         [
           "@babel/preset-env",
           {
-            "exclude": ["transform-classes"]
+            "modules": false
           }
-        ]
-      ]
-    },
-    "es6": {
-      "presets": [
-        "@babel/preset-react",
-        [
-          "@babel/preset-env",
-          {
-            "modules": false,
-            "exclude": ["transform-classes"]
-          }
-        ]
+        ],
+        "@babel/preset-react"
       ]
     }
   }

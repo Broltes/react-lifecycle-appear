@@ -1,23 +1,18 @@
 {
   "name": "react-lifecycle-appear",
-  "version": "1.1.1-3",
+  "version": "1.1.1-4",
   "description": "A React HOC, adding lifecycle methods for handling a component enters or exits the viewport.",
   "main": "lib/index.js",
-  "module": "es/index.js",
-  "browser": {
-    "es/index.js": "./es/index.js",
-    "lib/index.js": "./browser/index.js"
-  },
+  "module": "esm/index.js",
   "browserslist": [
     "Android >= 4.4",
     "iOS >= 9"
   ],
   "scripts": {
-    "build:browser": "babel src -d ./browser",
-    "build:es6": "BABEL_ENV=es6 babel src -d ./es",
-    "build:node": "BABEL_ENV=node babel src -d ./lib",
-    "clean": "rm -rf ./browser ./es ./lib",
-    "build": "npm run clean && npm run build:browser && npm run build:es6 && npm run build:node",
+    "build:cjs": "BABEL_ENV=node babel src -d ./lib",
+    "build:esm": "BABEL_ENV=esm babel src -d ./esm",
+    "clean": "rm -rf ./esm ./lib",
+    "build": "npm run clean && npm run build:cjs && npm run build:esm",
     "release": "node build/release.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -42,12 +37,15 @@
   },
   "homepage": "https://github.com/Broltes/react-lifecycle-appear#readme",
   "dependencies": {
+    "@babel/runtime": "^7.5.5",
+    "appear-event": "^0.3.0",
     "intersection-observer": "^0.7.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.5",
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
     "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "react": "^16.8.6",

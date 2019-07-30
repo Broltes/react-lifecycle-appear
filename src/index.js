@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import 'intersection-observer';
-import { getSingle } from './utils';
+import * as appearEventDelegations from 'appear-event/lib/event-listener';
 
 const hookNames = [
   'didAppearOnce',
@@ -9,63 +8,47 @@ const hookNames = [
   'didDisappear',
   'didDisappearOnce'
 ];
+
 /**
  * 为防止 hooks 被其它 HOC 屏蔽，所以通过参数传入
  * @param {object} hooks
  * @param {object} ioOptions
  */
 export default function withAppear(hooks, ioOptions) {
-  /**
-   * 兼容 SSR
-   * componentDidMount -> observer -> new IntersectionObserver
-   */
-  const getIo = getSingle(() => {
-    return new IntersectionObserver(entries => {
-      entries.forEach(item => {
-        const dom = item.target;
-        const { instance } = dom;
-        if (!instance) return;
+  function deligateEvent(el, eventName, actionName, instance) {
+    if (!instance[eventName]) return;
 
-        if (item.isIntersecting) {
-          // appear
-          if (instance.didAppearOnce) {
-            instance.didAppearOnce(item);
-            instance.didAppearOnce = null;
-          }
-          if (instance.didAppear) {
-            instance.didAppear(item);
-          }
-        } else {
-          // disappear
-          if (instance.didDisappearOnce) {
-            instance.didDisappearOnce(item);
-            instance.didDisappearOnce = null;
-          }
-          if (instance.didDisappear) {
-            instance.didDisappear(item);
-          }
-        }
+    const deligationName = eventName.replace('Once', '').replace('did', actionName) + 'Listener';
+    const once = /Once/.test(eventName);
+    const deligate = appearEventDelegations[deligationName];
 
-        if (hookNames.every(name => !instance[name])) {
-          unobserve(instance);
-        }
-      });
-    }, ioOptions);
-  });
+    deligate(
+      el,
+      e => {
+        instance[eventName](e);
+      },
+      {
+        once,
+        ...ioOptions
+      }
+    );
+  }
 
   function observe(instance) {
     const dom = ReactDOM.findDOMNode(instance);
     if (dom instanceof Element && hookNames.some(name => !!instance[name])) {
-      dom.instance = instance;
+      hookNames.forEach(eventName => {
+        deligateEvent(dom, eventName, 'add', instance);
+      });
       instance.__rah_dom = dom;
-      getIo().observe(dom);
     }
   }
   function unobserve(instance) {
     const { __rah_dom: dom } = instance;
     if (dom) {
-      dom.instance = null;
-      getIo().unobserve(dom);
+      hookNames.forEach(eventName => {
+        deligateEvent(dom, eventName, 'remove', instance);
+      });
     }
   }
 
