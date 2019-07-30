@@ -18,7 +18,8 @@ export default function withAppear(hooks, ioOptions) {
   function deligateEvent(el, eventName, actionName, instance) {
     if (!instance[eventName]) return;
 
-    const deligationName = eventName.replace('Once', '').replace('did', actionName) + 'Listener';
+    const deligationName =
+      eventName.replace('Once', '').replace('did', actionName) + 'Listener';
     const once = /Once/.test(eventName);
     const deligate = appearEventDelegations[deligationName];
 
@@ -52,24 +53,26 @@ export default function withAppear(hooks, ioOptions) {
     }
   }
 
-  return function(Cmpt) {
+  return function(MaybeES6Class) {
     /**
      * 通过继承的方式，而非透传 props 和 复用 UI 渲染，
      * 防止影响其它 HOC，如 MobX observer
+     *
+     * Enhance 转换成 ES5 后再继承 ES6 class 时会报错：
+     * Class constructor XXX cannot be invoked without 'new'
      */
-    class Enhance extends Cmpt {
-      componentDidMount() {
-        observe(this);
-        super.componentDidMount && super.componentDidMount.call(this);
-      }
+    const { componentDidMount, componentWillUnmount } = MaybeES6Class.prototype;
+    MaybeES6Class.prototype.componentDidMount = function() {
+      observe(this);
+      componentDidMount && componentDidMount.call(this);
+    };
+    MaybeES6Class.prototype.componentWillUnmount = function() {
+      unobserve(this);
+      componentWillUnmount && componentWillUnmount.call(this);
+    };
 
-      componentWillUnmount() {
-        unobserve(this);
-        super.componentWillUnmount && super.componentWillUnmount.call(this);
-      }
-    }
-
-    return Object.assign(Enhance, hooks);
+    Object.assign(MaybeES6Class.prototype, hooks);
+    return MaybeES6Class;
   };
 }
 

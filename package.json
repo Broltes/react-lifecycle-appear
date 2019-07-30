@@ -1,6 +1,6 @@
 {
   "name": "react-lifecycle-appear",
-  "version": "1.1.1-4",
+  "version": "1.1.1-5",
   "description": "A React HOC, adding lifecycle methods for handling a component enters or exits the viewport.",
   "main": "lib/index.js",
   "module": "esm/index.js",
@@ -38,8 +38,7 @@
   "homepage": "https://github.com/Broltes/react-lifecycle-appear#readme",
   "dependencies": {
     "@babel/runtime": "^7.5.5",
-    "appear-event": "^0.3.0",
-    "intersection-observer": "^0.7.0"
+    "appear-event": "^0.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
