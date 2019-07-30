@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import 'intersection-observer';
+import { getSingle } from './utils';
 
 const hookNames = [
   'didAppearOnce',
@@ -14,37 +15,43 @@ const hookNames = [
  * @param {object} ioOptions
  */
 export default function withAppear(hooks, ioOptions) {
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(item => {
-      const dom = item.target;
-      const { instance } = dom;
-      if (!instance) return;
+  /**
+   * 兼容 SSR
+   * componentDidMount -> observer -> new IntersectionObserver
+   */
+  const getIo = getSingle(() => {
+    return new IntersectionObserver(entries => {
+      entries.forEach(item => {
+        const dom = item.target;
+        const { instance } = dom;
+        if (!instance) return;
 
-      if (item.isIntersecting) {
-        // appear
-        if (instance.didAppearOnce) {
-          instance.didAppearOnce(item);
-          instance.didAppearOnce = null;
+        if (item.isIntersecting) {
+          // appear
+          if (instance.didAppearOnce) {
+            instance.didAppearOnce(item);
+            instance.didAppearOnce = null;
+          }
+          if (instance.didAppear) {
+            instance.didAppear(item);
+          }
+        } else {
+          // disappear
+          if (instance.didDisappearOnce) {
+            instance.didDisappearOnce(item);
+            instance.didDisappearOnce = null;
+          }
+          if (instance.didDisappear) {
+            instance.didDisappear(item);
+          }
         }
-        if (instance.didAppear) {
-          instance.didAppear(item);
-        }
-      } else {
-        // disappear
-        if (instance.didDisappearOnce) {
-          instance.didDisappearOnce(item);
-          instance.didDisappearOnce = null;
-        }
-        if (instance.didDisappear) {
-          instance.didDisappear(item);
-        }
-      }
 
-      if (hookNames.every(name => !instance[name])) {
-        unobserve(instance);
-      }
-    });
-  }, ioOptions);
+        if (hookNames.every(name => !instance[name])) {
+          unobserve(instance);
+        }
+      });
+    }, ioOptions);
+  });
 
   function observe(instance) {
     const dom = ReactDOM.findDOMNode(instance);
