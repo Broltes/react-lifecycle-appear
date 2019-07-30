@@ -58,14 +58,14 @@ export default function withAppear(hooks, ioOptions) {
     if (dom instanceof Element && hookNames.some(name => !!instance[name])) {
       dom.instance = instance;
       instance.__rah_dom = dom;
-      io.observe(dom);
+      getIo().observe(dom);
     }
   }
   function unobserve(instance) {
     const { __rah_dom: dom } = instance;
     if (dom) {
       dom.instance = null;
-      io.unobserve(dom);
+      getIo().unobserve(dom);
     }
   }
 
