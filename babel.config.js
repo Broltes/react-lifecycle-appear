@@ -5,12 +5,12 @@ module.exports = function(api) {
   ];
 
   const presetEnvOptions = {};
-  if (api.env('nc')) {
+  if (api.env('node')) {
     // Node CJS
     presetEnvOptions.targets = {
       node: '6'
     };
-  } else if (api.env('be')) {
+  } else if (api.env('browser')) {
     // Browser ESM
     presetEnvOptions.modules = false;
     presetEnvOptions.targets = {
