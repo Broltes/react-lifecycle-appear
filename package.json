@@ -34,6 +34,7 @@
   "homepage": "https://github.com/Broltes/react-lifecycle-appear#readme",
   "dependencies": {
     "@babel/runtime": "^7.5.5",
+    "@babel/runtime-corejs3": "^7.7.4",
     "appear-event": "^0.3.1"
   },
   "devDependencies": {

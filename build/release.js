@@ -27,7 +27,12 @@ async function main() {
   const isBetaVersion = /(^pre)|-/.test(inputVer);
 
   // upgrade version
-  exec('npm', ['version', '--no-git-tag-version', inputVer]);
+  exec('npm', [
+    'version',
+    '--no-git-tag-version',
+    inputVer,
+    '--preid' + (isBetaVersion ? '=beta' : '')
+  ]);
   const releaseVer = requireNoCache('../package.json').version;
 
   console.log(`正在发布 ${releaseVer} ... \n\r`);
@@ -44,7 +49,7 @@ async function main() {
   exec('git', ['add', '-A']);
   exec('git', ['commit', '-m', `release:${releaseVer}: ${versionMessage}`]);
   if (!isBetaVersion) {
-    exec('git', ['tag', `v${releaseVer}`]);
+    exec('git', ['tag', `v${releaseVer}`, '-m', versionMessage]);
   }
   exec('git', ['push', '--follow-tags']);
 }

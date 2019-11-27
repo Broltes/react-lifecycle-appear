@@ -1,7 +1,7 @@
 module.exports = function(api) {
   const plugins = [
     ['@babel/plugin-proposal-decorators', { legacy: true }],
-    '@babel/plugin-transform-runtime'
+    ['@babel/plugin-transform-runtime', { corejs: 3 }]
   ];
 
   const presetEnvOptions = {};
